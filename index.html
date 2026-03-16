@@ -350,13 +350,15 @@
   const cursor = document.getElementById('boot-cursor')
   const page   = document.getElementById('page-content')
 
-  const TEXT1 = '$ coconut-creme --init'
-  const TEXT2 = 'loading broadcast engine... '
-  const TEXT3 = '▸ signal acquired.'
+  const TEXT1  = '$ coconut-creme --init'
+  const TEXT2A = 'loading broadcast engine'
+  const TEXT3  = '▸ signal acquired.'
 
-  const T_CHAR  = 38
-  const T_PAUSE = 340
-  const T_FADE  = 400
+  const T_CHAR       = 26   // ms per character
+  const T_PAUSE      = 220  // pause between lines
+  const T_DOT        = 480  // ms between each dot
+  const T_TICK_PAUSE = 800  // suspense before ✓ snaps in
+  const T_FADE       = 300  // delay before page fades in
 
   function moveCursorAfter(el) {
     el.parentNode.appendChild(cursor)
@@ -372,27 +374,38 @@
     tick()
   }
 
-  // line 1
-  type(line1, TEXT1, () => {
-    setTimeout(() => {
-      // show line 2, move cursor into it
-      bootL2.style.display = ''
-      moveCursorAfter(line2)
-      type(line2, TEXT2, () => {
-        // snap in the ✓ in green
+  function startLine3() {
+    bootL3.style.display = ''
+    moveCursorAfter(line3)
+    type(line3, TEXT3, () => {
+      cursor.style.display = 'none'
+      setTimeout(() => page.classList.add('visible'), T_FADE)
+    })
+  }
+
+  function addDots(n) {
+    line2.textContent = TEXT2A + '.'.repeat(n)
+    if (n < 3) {
+      setTimeout(() => addDots(n + 1), T_DOT)
+    } else {
+      // suspense pause, then ✓ snaps in, then line 3
+      setTimeout(() => {
         const ok = document.createElement('span')
         ok.className = 'ok'
-        ok.textContent = '✓'
+        ok.textContent = ' ✓'
         line2.parentNode.insertBefore(ok, cursor)
-        setTimeout(() => {
-          // show line 3, move cursor into it
-          bootL3.style.display = ''
-          moveCursorAfter(line3)
-          type(line3, TEXT3, () => {
-            cursor.style.display = 'none'
-            setTimeout(() => page.classList.add('visible'), T_FADE)
-          })
-        }, T_PAUSE)
+        setTimeout(startLine3, T_PAUSE)
+      }, T_TICK_PAUSE)
+    }
+  }
+
+  // line 1 → pause → line 2 → dots → ✓ → line 3 → fade
+  type(line1, TEXT1, () => {
+    setTimeout(() => {
+      bootL2.style.display = ''
+      moveCursorAfter(line2)
+      type(line2, TEXT2A, () => {
+        setTimeout(() => addDots(1), T_DOT)
       })
     }, T_PAUSE)
   })
