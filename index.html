@@ -354,11 +354,11 @@
   const TEXT2A = 'loading broadcast engine'
   const TEXT3  = '▸ signal acquired.'
 
-  const T_CHAR       = 26   // ms per character
-  const T_PAUSE      = 220  // pause between lines
-  const T_DOT        = 480  // ms between each dot
-  const T_TICK_PAUSE = 800  // suspense before ✓ snaps in
-  const T_FADE       = 300  // delay before page fades in
+  const T_CHAR       = 52   // ms per character
+  const T_PAUSE      = 400  // pause between lines
+  const T_DOT        = 700  // ms between each dot
+  const T_TICK_PAUSE = 1100 // suspense before ✓ snaps in
+  const T_FADE       = 400  // delay before page fades in
 
   function moveCursorAfter(el) {
     el.parentNode.appendChild(cursor)
