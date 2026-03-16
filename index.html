@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>coconut creme</title>
+<style>
+  :root {
+    --bg:      oklch(0.18 0.02 340);
+    --bg2:     oklch(0.22 0.02 340);
+    --fg:      oklch(0.95 0.01 340);
+    --primary: oklch(0.82 0.2  340);
+    --muted:   oklch(0.55 0.02 340);
+    --dim:     oklch(0.35 0.02 340);
+    --border:  oklch(0.30 0.02 340);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--muted);
+    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
+    font-size: 13px;
+    line-height: 1.75;
+    padding: 52px 28px 100px;
+    max-width: 780px;
+    margin: 0 auto;
+    transition: background 0.35s, color 0.35s;
+  }
+
+  #controls {
+    position: fixed; top: 14px; right: 14px;
+    display: flex; gap: 8px; z-index: 99;
+  }
+  .ctl {
+    font-family: ui-monospace, monospace; font-size: 10px;
+    color: var(--dim); border: 1px solid var(--border);
+    padding: 3px 10px; cursor: pointer; background: var(--bg);
+    transition: color 0.2s, border-color 0.2s; user-select: none;
+  }
+  .ctl:hover { color: var(--primary); border-color: var(--primary); }
+
+  /* boot */
+  #boot { margin-bottom: 36px; }
+  .ok { color: var(--primary); }
+  .dim-text { color: var(--dim); }
+
+  /* hero */
+  #hero { margin-bottom: 52px; }
+  .app-name { font-size: 28px; color: var(--fg); letter-spacing: -0.5px; margin-bottom: 4px; }
+  .app-name .stars { color: var(--primary); font-size: 20px; }
+  .tagline { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  .dl-btn {
+    display: inline-block; font-family: ui-monospace, monospace; font-size: 13px;
+    padding: 9px 24px; background: var(--primary); color: var(--bg);
+    text-decoration: none; transition: opacity 0.15s; margin-right: 16px;
+  }
+  .dl-btn:hover { opacity: 0.82; }
+  .version-meta { color: var(--dim); font-size: 11px; margin-top: 12px; }
+
+  /* section */
+  .section { margin-bottom: 52px; }
+  .section-head { color: var(--dim); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 20px; }
+  .section-head .hash { color: var(--primary); opacity: 0.55; }
+
+  /* screenshot — breaks out of column, floats with glow */
+  .screenshot-wrap {
+    line-height: 0;
+    margin-left: -120px;
+    margin-right: -120px;
+    margin-bottom: 8px;
+    transform: perspective(1200px) rotateX(2deg);
+    transform-origin: center top;
+    filter: drop-shadow(0 24px 60px color-mix(in oklch, var(--primary) 35%, transparent));
+    transition: filter 0.4s, transform 0.4s;
+  }
+  .screenshot-wrap:hover {
+    transform: perspective(1200px) rotateX(0deg);
+    filter: drop-shadow(0 32px 80px color-mix(in oklch, var(--primary) 55%, transparent));
+  }
+  .screenshot-wrap img { width: 100%; display: block; }
+
+  /* install */
+  .install-steps { display: flex; flex-direction: column; gap: 18px; }
+  .step { display: flex; gap: 14px; align-items: flex-start; }
+  .step-num { color: var(--primary); font-size: 11px; padding-top: 1px; flex-shrink: 0; width: 20px; }
+  .step-title { color: var(--fg); margin-bottom: 4px; }
+  .step-desc { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .code-block {
+    background: var(--bg2); border: 1px solid var(--border);
+    padding: 8px 14px; font-size: 12px; color: var(--muted); display: inline-block;
+  }
+  .code-block .prompt { color: var(--dim); }
+  .code-block .cmd    { color: var(--fg); }
+  .code-block .arg    { color: var(--primary); }
+  .step-note { color: var(--dim); font-size: 11px; margin-top: 6px; }
+
+  /* requirement callout */
+  .callout {
+    border: 1px solid var(--border);
+    background: var(--bg2);
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  .callout .callout-head { color: var(--fg); margin-bottom: 6px; }
+  .callout p { color: var(--muted); margin-bottom: 6px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout a { color: var(--primary); text-decoration: none; }
+  .callout a:hover { text-decoration: underline; }
+
+  /* features */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 40px; }
+  .feat-item { color: var(--muted); }
+  .feat-item::before { content: '▸ '; color: var(--primary); }
+
+  /* changelog */
+  .cl-ver  { color: var(--primary); }
+  .cl-date { color: var(--dim); font-size: 11px; margin-bottom: 8px; }
+  .cl-item { color: var(--muted); padding-left: 16px; position: relative; margin-bottom: 2px; }
+  .cl-item::before { position: absolute; left: 0; }
+  .cl-item.fix::before { content: '~'; color: oklch(0.72 0.15 80); }
+  .cl-item.add::before { content: '+'; color: oklch(0.65 0.18 145); }
+  .cl-sep  { color: var(--border); margin: 16px 0 14px; }
+
+  .deco { color: var(--dim); font-size: 10px; opacity: 0.4; white-space: pre; user-select: none; margin-bottom: 32px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div id="controls">
+  <div class="ctl" id="mode-btn">☀ light</div>
+  <div class="ctl" id="theme-btn">theme: pink ↻</div>
+</div>
+
+<div id="boot">
+  <span class="dim-text">$ coconut-creme --init</span><br>
+  <span class="dim-text">loading broadcast engine... <span class="ok">✓</span></span><br>
+  <span class="ok">▸ signal acquired.</span>
+</div>
+
+<div class="deco">  *  .  *  .     .  *  .
+  .     .  *  .     .  *  .</div>
+
+<!-- screenshot -->
+<div class="screenshot-wrap" style="margin-bottom: 36px;">
+  <img id="screenshot"
+    src="files/darkmode-clean.png"
+    alt="coconut creme screenshot">
+</div>
+
+<div id="hero">
+  <div class="app-name">coconut creme <span class="stars">***</span></div>
+  <div class="tagline">yr iptv yr desktop</div>
+  <a href="https://github.com/lvmh/coconut-creme-releases/releases/latest" class="dl-btn">⬇ download v0.1.2 &nbsp;(.dmg)</a>
+  <div class="version-meta">macOS · Apple Silicon · arm64</div>
+</div>
+
+<!-- iptv subscription note -->
+<div class="section">
+  <div class="section-head"><span class="hash">## </span>what you need</div>
+  <div class="callout">
+    <div class="callout-head">⚠ you'll need an IPTV subscription</div>
+    <p>coconut creme is a player — it doesn't come with any content. to use it you need a subscription from an IPTV provider that supports the <strong style="color:var(--fg)">Xtream Codes API</strong> or <strong style="color:var(--fg)">M3U playlists</strong>.</p>
+    <p>your provider will give you a server URL, username, and password. enter those on the login screen and you're in.</p>
+    <p style="color:var(--dim)">search for <span style="color:var(--primary)">"xtream codes IPTV"</span> to find providers — most offer a 24–72 hour trial before you commit.</p>
+  </div>
+</div>
+
+<!-- install -->
+<div class="section">
+  <div class="section-head"><span class="hash">## </span>install</div>
+  <div class="install-steps">
+    <div class="step">
+      <div class="step-num">01.</div>
+      <div class="step-body">
+        <div class="step-title">download the .dmg</div>
+        <div class="step-desc">click the button above and open the disk image</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">02.</div>
+      <div class="step-body">
+        <div class="step-title">drag to applications</div>
+        <div class="step-desc">move coconut creme.app into your Applications folder</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">03.</div>
+      <div class="step-body">
+        <div class="step-title">remove quarantine flag</div>
+        <div class="step-desc">macOS blocks apps distributed outside the App Store — run this once in terminal:</div>
+        <div class="code-block">
+          <span class="prompt">$ </span><span class="cmd">xattr -d com.apple.quarantine </span><span class="arg">"/Applications/coconut creme.app"</span>
+        </div>
+        <div class="step-note">if macOS still blocks it, go to System Settings → Privacy &amp; Security and click Open Anyway</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">04.</div>
+      <div class="step-body">
+        <div class="step-title">launch &amp; connect</div>
+        <div class="step-desc">open the app and enter your IPTV provider URL + credentials</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- features -->
+<div class="section">
+  <div class="section-head"><span class="hash">## </span>features</div>
+  <div class="feat-grid">
+    <div class="feat-item">live TV streaming</div>
+    <div class="feat-item">HLS + MPEG-TS playback</div>
+    <div class="feat-item">movies &amp; VOD</div>
+    <div class="feat-item">slow mode buffering</div>
+    <div class="feat-item">series &amp; episodes</div>
+    <div class="feat-item">adaptive buffer tuning</div>
+    <div class="feat-item">TMDB metadata + posters</div>
+    <div class="feat-item">resume playback</div>
+    <div class="feat-item">multiple colour themes</div>
+    <div class="feat-item">live sports scores</div>
+    <div class="feat-item">channel search</div>
+    <div class="feat-item">auto-updates</div>
+  </div>
+</div>
+
+<!-- changelog -->
+<div class="section">
+  <div class="section-head"><span class="hash">## </span>changelog</div>
+  <div class="cl-ver">v0.1.2 <span style="color:var(--dim)">— latest</span></div>
+  <div class="cl-date">2026-03-16</div>
+  <div class="cl-item fix">fix slow-mode stall double-play (seek-back race condition)</div>
+  <div class="cl-sep">──────────────────────────────────────</div>
+  <div class="cl-ver" style="opacity:0.55">v0.1.1</div>
+  <div class="cl-date">2026-03-15</div>
+  <div class="cl-item fix">replace availTop with Tauri monitor API</div>
+  <div class="cl-item add">icon overhaul + release pipeline</div>
+</div>
+
+<div style="margin-top: 52px; color: var(--dim); font-size: 12px;">
+  by <a href="https://hotelsoap.org" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">hotelsoap</a> for you ❤️
+</div>
+
+<script>
+const DARK_SS  = "files/darkmode-clean.png"
+const LIGHT_SS = "files/lightmode-clean.png"
+
+const THEMES = {
+  pink:   { dark:  { bg:'oklch(0.18 0.02 340)', bg2:'oklch(0.22 0.02 340)', fg:'oklch(0.95 0.01 340)', primary:'oklch(0.82 0.2 340)',  muted:'oklch(0.55 0.02 340)', dim:'oklch(0.35 0.02 340)', border:'oklch(0.30 0.02 340)' },
+            light: { bg:'oklch(0.99 0.005 340)',bg2:'oklch(0.96 0.01 340)', fg:'oklch(0.18 0.02 340)', primary:'oklch(0.6 0.18 340)',   muted:'oklch(0.38 0.02 340)', dim:'oklch(0.60 0.02 340)', border:'oklch(0.88 0.03 340)' } },
+  kerama: { dark:  { bg:'oklch(0.16 0.03 250)', bg2:'oklch(0.20 0.04 248)', fg:'oklch(0.92 0.02 245)', primary:'oklch(0.7 0.16 245)',  muted:'oklch(0.55 0.04 245)', dim:'oklch(0.34 0.04 248)', border:'oklch(0.30 0.05 248)' },
+            light: { bg:'oklch(0.985 0.008 240)',bg2:'oklch(0.94 0.03 245)',fg:'oklch(0.22 0.03 250)', primary:'oklch(0.55 0.18 250)',  muted:'oklch(0.38 0.04 250)', dim:'oklch(0.62 0.02 250)', border:'oklch(0.85 0.04 245)' } },
+  brazil: { dark:  { bg:'oklch(0.16 0.03 265)', bg2:'oklch(0.20 0.04 265)', fg:'oklch(0.92 0.02 145)', primary:'oklch(0.9 0.18 95)',   muted:'oklch(0.55 0.04 145)', dim:'oklch(0.34 0.04 265)', border:'oklch(0.30 0.05 265)' },
+            light: { bg:'oklch(0.98 0.01 145)', bg2:'oklch(0.93 0.03 145)', fg:'oklch(0.22 0.03 265)', primary:'oklch(0.48 0.18 145)', muted:'oklch(0.38 0.04 265)', dim:'oklch(0.60 0.02 265)', border:'oklch(0.85 0.04 145)' } },
+  noni:   { dark:  { bg:'oklch(0.2 0.035 118)', bg2:'oklch(0.25 0.05 118)', fg:'oklch(0.9 0.025 118)', primary:'oklch(0.74 0.15 122)', muted:'oklch(0.55 0.05 118)', dim:'oklch(0.36 0.06 118)', border:'oklch(0.32 0.06 118)' },
+            light: { bg:'oklch(0.96 0.012 118)',bg2:'oklch(0.90 0.03 118)', fg:'oklch(0.28 0.05 118)', primary:'oklch(0.56 0.18 118)', muted:'oklch(0.38 0.05 118)', dim:'oklch(0.60 0.03 118)', border:'oklch(0.78 0.06 118)' } },
+  paris:  { dark:  { bg:'oklch(0.16 0.03 330)', bg2:'oklch(0.20 0.04 330)', fg:'oklch(0.95 0.01 330)', primary:'oklch(0.78 0.28 328)', muted:'oklch(0.55 0.03 330)', dim:'oklch(0.34 0.04 330)', border:'oklch(0.30 0.04 330)' },
+            light: { bg:'oklch(0.99 0.01 330)', bg2:'oklch(0.95 0.03 330)', fg:'oklch(0.22 0.02 330)', primary:'oklch(0.62 0.28 328)', muted:'oklch(0.38 0.03 330)', dim:'oklch(0.62 0.02 330)', border:'oklch(0.88 0.04 330)' } },
+  rooney: { dark:  { bg:'oklch(0.12 0.05 22)',  bg2:'oklch(0.17 0.07 22)',  fg:'oklch(0.97 0.01 22)',  primary:'oklch(0.58 0.30 22)',  muted:'oklch(0.52 0.06 22)',  dim:'oklch(0.30 0.07 22)',  border:'oklch(0.26 0.09 22)'  },
+            light: { bg:'oklch(0.99 0.005 22)',  bg2:'oklch(0.93 0.025 22)', fg:'oklch(0.15 0.04 22)',  primary:'oklch(0.47 0.28 22)',  muted:'oklch(0.38 0.05 22)',  dim:'oklch(0.60 0.03 22)',  border:'oklch(0.86 0.04 22)'  } },
+}
+
+const names = Object.keys(THEMES)
+let themeIdx = Math.floor(Math.random() * names.length)
+let mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+
+function applyTheme() {
+  const t = THEMES[names[themeIdx]][mode]
+  const r = document.documentElement.style
+  r.setProperty('--bg', t.bg); r.setProperty('--bg2', t.bg2)
+  r.setProperty('--fg', t.fg); r.setProperty('--primary', t.primary)
+  r.setProperty('--muted', t.muted); r.setProperty('--dim', t.dim)
+  r.setProperty('--border', t.border)
+  document.getElementById('theme-btn').textContent = `theme: ${names[themeIdx]} ↻`
+  document.getElementById('mode-btn').textContent  = mode === 'dark' ? '☀ light' : '☾ dark'
+  document.getElementById('screenshot').src = mode === 'dark' ? DARK_SS : LIGHT_SS
+}
+
+applyTheme()
+
+document.getElementById('theme-btn').addEventListener('click', () => { themeIdx = (themeIdx + 1) % names.length; applyTheme() })
+document.getElementById('mode-btn').addEventListener('click', () => { mode = mode === 'dark' ? 'light' : 'dark'; applyTheme() })
+</script>
+</body>
+</html>
