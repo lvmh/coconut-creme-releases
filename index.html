@@ -64,11 +64,11 @@
   .section-head { color: var(--dim); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 20px; }
   .section-head .hash { color: var(--primary); opacity: 0.55; }
 
-  /* screenshot — breaks out of column, floats with glow */
+  /* screenshot — breaks out of column symmetrically */
   .screenshot-wrap {
     line-height: 0;
+    width: calc(100% + 240px);
     margin-left: -120px;
-    margin-right: -120px;
     margin-bottom: 8px;
     filter: drop-shadow(0 24px 60px color-mix(in oklch, var(--primary) 35%, transparent));
     transition: filter 0.4s;
