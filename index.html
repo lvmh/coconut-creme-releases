@@ -70,13 +70,10 @@
     margin-left: -120px;
     margin-right: -120px;
     margin-bottom: 8px;
-    transform: perspective(1200px) rotateX(2deg);
-    transform-origin: center top;
     filter: drop-shadow(0 24px 60px color-mix(in oklch, var(--primary) 35%, transparent));
-    transition: filter 0.4s, transform 0.4s;
+    transition: filter 0.4s;
   }
   .screenshot-wrap:hover {
-    transform: perspective(1200px) rotateX(0deg);
     filter: drop-shadow(0 32px 80px color-mix(in oklch, var(--primary) 55%, transparent));
   }
   .screenshot-wrap img { width: 100%; display: block; }
