@@ -65,19 +65,42 @@
   .section-head { color: var(--dim); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 20px; }
   .section-head .hash { color: var(--primary); opacity: 0.55; }
 
-  /* screenshot — breaks out of column symmetrically */
+  /* macOS app window simulation */
   .screenshot-wrap {
-    line-height: 0;
     width: calc(100% + 240px);
     margin-left: -120px;
-    margin-bottom: 8px;
-    filter: drop-shadow(0 24px 60px color-mix(in oklch, var(--primary) 35%, transparent));
+    margin-bottom: 36px;
+    filter: drop-shadow(0 28px 72px color-mix(in oklch, var(--primary) 30%, black 20%));
     transition: filter 0.4s;
   }
   .screenshot-wrap:hover {
-    filter: drop-shadow(0 32px 80px color-mix(in oklch, var(--primary) 55%, transparent));
+    filter: drop-shadow(0 36px 96px color-mix(in oklch, var(--primary) 50%, black 20%));
   }
-  .screenshot-wrap img { width: 100%; display: block; }
+  .mac-window {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid oklch(0.4 0 0 / 0.3);
+  }
+  .mac-titlebar {
+    background: oklch(0.24 0.01 0 / 0.95);
+    height: 34px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    gap: 8px;
+    flex-shrink: 0;
+    border-bottom: 1px solid oklch(0.15 0 0 / 0.5);
+  }
+  .mac-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .mac-dot.red    { background: #ff5f57; }
+  .mac-dot.yellow { background: #febc2e; }
+  .mac-dot.green  { background: #28c840; }
+  .mac-window img { width: 100%; display: block; line-height: 0; }
 
   /* install */
   .install-steps { display: flex; flex-direction: column; gap: 18px; }
@@ -172,7 +195,7 @@
 
 <div id="controls">
   <div class="ctl" id="mode-btn">☀ light</div>
-  <div class="ctl" id="theme-btn">theme: pink ↻</div>
+  <div class="ctl" id="theme-btn">theme: brazil ↻</div>
 </div>
 
 <div id="boot">
@@ -184,11 +207,18 @@
 <div class="deco">  *  .  *  .     .  *  .
   .     .  *  .     .  *  .</div>
 
-<!-- screenshot -->
-<div class="screenshot-wrap" style="margin-bottom: 36px;">
-  <img id="screenshot"
-    src="files/darkmode-clean.png"
-    alt="coconut creme screenshot">
+<!-- screenshot with macOS window chrome -->
+<div class="screenshot-wrap">
+  <div class="mac-window">
+    <div class="mac-titlebar">
+      <span class="mac-dot red"></span>
+      <span class="mac-dot yellow"></span>
+      <span class="mac-dot green"></span>
+    </div>
+    <img id="screenshot"
+      src="files/brazil-dark.png"
+      alt="coconut creme screenshot">
+  </div>
 </div>
 
 <div id="hero">
@@ -213,7 +243,7 @@
     <div class="feat-item">adaptive buffer tuning</div>
     <div class="feat-item">TMDB metadata + posters</div>
     <div class="feat-item">resume playback</div>
-    <div class="feat-item">multiple colour themes</div>
+    <div class="feat-item">colour themes</div>
     <div class="feat-item">live sports scores</div>
     <div class="feat-item">channel search</div>
     <div class="feat-item">auto-updates</div>
@@ -227,10 +257,10 @@
 <div class="section">
   <div class="section-head"><span class="hash">## </span>what you need</div>
   <div class="callout">
-    <div class="callout-head">⚠ you'll need an IPTV subscription</div>
-    <p>coconut creme is a player — it doesn't come with any content. to use it you need a subscription from an IPTV provider that supports the <strong style="color:var(--fg)">Xtream Codes API</strong> or <strong style="color:var(--fg)">M3U playlists</strong>.</p>
-    <p>your provider will give you a server URL, username, and password. enter those on the login screen and you're in.</p>
-    <p style="color:var(--dim)">search for <span style="color:var(--primary)">"xtream codes IPTV"</span> to find providers — most offer a 24–72 hour trial before you commit.</p>
+    <div class="callout-head">you'll need an IPTV subscription.</div>
+    <p>coconut creme is a player — it doesn't come with content. you need a subscription from a provider that supports <strong style="color:var(--fg)">Xtream Codes</strong> or <strong style="color:var(--fg)">M3U playlists</strong>.</p>
+    <p>your provider gives you a server URL, username, and password. enter those on the login screen.</p>
+    <p style="color:var(--dim)">search <span style="color:var(--primary)">"xtream codes IPTV"</span> to find providers — most offer a trial before you commit.</p>
   </div>
 </div>
 
@@ -249,18 +279,18 @@
       <div class="step-num">02.</div>
       <div class="step-body">
         <div class="step-title">drag to applications</div>
-        <div class="step-desc">move coconut creme.app into your Applications folder</div>
+        <div class="step-desc">move coconut creme.app into your applications folder</div>
       </div>
     </div>
     <div class="step">
       <div class="step-num">03.</div>
       <div class="step-body">
         <div class="step-title">remove quarantine flag</div>
-        <div class="step-desc">macOS blocks apps distributed outside the App Store — run this once in terminal:</div>
+        <div class="step-desc">macOS blocks apps distributed outside the app store — run this once in terminal:</div>
         <div class="code-block">
           <span class="prompt">$ </span><span class="cmd">xattr -d com.apple.quarantine </span><span class="arg">"/Applications/coconut creme.app"</span>
         </div>
-        <div class="step-note">if macOS still blocks it, go to System Settings → Privacy &amp; Security and click Open Anyway</div>
+        <div class="step-note">if macOS still blocks it, go to system settings → privacy &amp; security and click open anyway</div>
       </div>
     </div>
     <div class="step">
@@ -294,22 +324,17 @@
 </div>
 
 <script>
-const DARK_SS  = "files/darkmode-clean.png"
-const LIGHT_SS = "files/lightmode-clean.png"
-
 const THEMES = {
-  pink:   { dark:  { bg:'oklch(0.18 0.02 340)', bg2:'oklch(0.22 0.02 340)', fg:'oklch(0.95 0.01 340)', primary:'oklch(0.82 0.2 340)',  muted:'oklch(0.55 0.02 340)', dim:'oklch(0.35 0.02 340)', border:'oklch(0.30 0.02 340)' },
-            light: { bg:'oklch(0.99 0.005 340)',bg2:'oklch(0.96 0.01 340)', fg:'oklch(0.18 0.02 340)', primary:'oklch(0.6 0.18 340)',   muted:'oklch(0.38 0.02 340)', dim:'oklch(0.60 0.02 340)', border:'oklch(0.88 0.03 340)' } },
-  kerama: { dark:  { bg:'oklch(0.16 0.03 250)', bg2:'oklch(0.20 0.04 248)', fg:'oklch(0.92 0.02 245)', primary:'oklch(0.7 0.16 245)',  muted:'oklch(0.55 0.04 245)', dim:'oklch(0.34 0.04 248)', border:'oklch(0.30 0.05 248)' },
-            light: { bg:'oklch(0.985 0.008 240)',bg2:'oklch(0.94 0.03 245)',fg:'oklch(0.22 0.03 250)', primary:'oklch(0.55 0.18 250)',  muted:'oklch(0.38 0.04 250)', dim:'oklch(0.62 0.02 250)', border:'oklch(0.85 0.04 245)' } },
-  brazil: { dark:  { bg:'oklch(0.16 0.03 265)', bg2:'oklch(0.20 0.04 265)', fg:'oklch(0.92 0.02 145)', primary:'oklch(0.9 0.18 95)',   muted:'oklch(0.55 0.04 145)', dim:'oklch(0.34 0.04 265)', border:'oklch(0.30 0.05 265)' },
-            light: { bg:'oklch(0.98 0.01 145)', bg2:'oklch(0.93 0.03 145)', fg:'oklch(0.22 0.03 265)', primary:'oklch(0.48 0.18 145)', muted:'oklch(0.38 0.04 265)', dim:'oklch(0.60 0.02 265)', border:'oklch(0.85 0.04 145)' } },
-  noni:   { dark:  { bg:'oklch(0.2 0.035 118)', bg2:'oklch(0.25 0.05 118)', fg:'oklch(0.9 0.025 118)', primary:'oklch(0.74 0.15 122)', muted:'oklch(0.55 0.05 118)', dim:'oklch(0.36 0.06 118)', border:'oklch(0.32 0.06 118)' },
-            light: { bg:'oklch(0.96 0.012 118)',bg2:'oklch(0.90 0.03 118)', fg:'oklch(0.28 0.05 118)', primary:'oklch(0.56 0.18 118)', muted:'oklch(0.38 0.05 118)', dim:'oklch(0.60 0.03 118)', border:'oklch(0.78 0.06 118)' } },
-  paris:  { dark:  { bg:'oklch(0.16 0.03 330)', bg2:'oklch(0.20 0.04 330)', fg:'oklch(0.95 0.01 330)', primary:'oklch(0.78 0.28 328)', muted:'oklch(0.55 0.03 330)', dim:'oklch(0.34 0.04 330)', border:'oklch(0.30 0.04 330)' },
-            light: { bg:'oklch(0.99 0.01 330)', bg2:'oklch(0.95 0.03 330)', fg:'oklch(0.22 0.02 330)', primary:'oklch(0.62 0.28 328)', muted:'oklch(0.38 0.03 330)', dim:'oklch(0.62 0.02 330)', border:'oklch(0.88 0.04 330)' } },
-  rooney: { dark:  { bg:'oklch(0.12 0.05 22)',  bg2:'oklch(0.17 0.07 22)',  fg:'oklch(0.97 0.01 22)',  primary:'oklch(0.58 0.30 22)',  muted:'oklch(0.52 0.06 22)',  dim:'oklch(0.30 0.07 22)',  border:'oklch(0.26 0.09 22)'  },
-            light: { bg:'oklch(0.99 0.005 22)',  bg2:'oklch(0.93 0.025 22)', fg:'oklch(0.15 0.04 22)',  primary:'oklch(0.47 0.28 22)',  muted:'oklch(0.38 0.05 22)',  dim:'oklch(0.60 0.03 22)',  border:'oklch(0.86 0.04 22)'  } },
+  brazil:   { dark:  { bg:'oklch(0.16 0.03 265)', bg2:'oklch(0.20 0.04 265)', fg:'oklch(0.92 0.02 145)', primary:'oklch(0.9 0.18 95)',   muted:'oklch(0.55 0.04 145)', dim:'oklch(0.34 0.04 265)', border:'oklch(0.30 0.05 265)' },
+              light: { bg:'oklch(0.98 0.01 145)', bg2:'oklch(0.93 0.03 145)', fg:'oklch(0.22 0.03 265)', primary:'oklch(0.48 0.18 145)', muted:'oklch(0.38 0.04 265)', dim:'oklch(0.60 0.02 265)', border:'oklch(0.85 0.04 145)' } },
+  kanagawa: { dark:  { bg:'oklch(0.16 0.02 285)', bg2:'oklch(0.13 0.02 285)', fg:'oklch(0.88 0.05 88)',  primary:'oklch(0.73 0.08 222)', muted:'oklch(0.5 0.03 80)',   dim:'oklch(0.26 0.03 285)', border:'oklch(0.26 0.03 285)' },
+              light: { bg:'oklch(0.95 0.05 92)',  bg2:'oklch(0.89 0.07 88)',  fg:'oklch(0.4 0.03 280)',  primary:'oklch(0.55 0.09 222)', muted:'oklch(0.49 0.04 82)',  dim:'oklch(0.79 0.06 88)',  border:'oklch(0.79 0.06 88)'  } },
+  noni:     { dark:  { bg:'oklch(0.2 0.035 118)', bg2:'oklch(0.25 0.05 118)', fg:'oklch(0.9 0.025 118)', primary:'oklch(0.74 0.15 122)', muted:'oklch(0.55 0.05 118)', dim:'oklch(0.36 0.06 118)', border:'oklch(0.32 0.06 118)' },
+              light: { bg:'oklch(0.96 0.012 118)',bg2:'oklch(0.90 0.03 118)', fg:'oklch(0.28 0.05 118)', primary:'oklch(0.56 0.18 118)', muted:'oklch(0.38 0.05 118)', dim:'oklch(0.60 0.03 118)', border:'oklch(0.78 0.06 118)' } },
+  paris:    { dark:  { bg:'oklch(0.16 0.03 330)', bg2:'oklch(0.20 0.04 330)', fg:'oklch(0.95 0.01 330)', primary:'oklch(0.78 0.28 328)', muted:'oklch(0.55 0.03 330)', dim:'oklch(0.34 0.04 330)', border:'oklch(0.30 0.04 330)' },
+              light: { bg:'oklch(0.99 0.01 330)', bg2:'oklch(0.95 0.03 330)', fg:'oklch(0.22 0.02 330)', primary:'oklch(0.62 0.28 328)', muted:'oklch(0.38 0.03 330)', dim:'oklch(0.62 0.02 330)', border:'oklch(0.88 0.04 330)' } },
+  rooney:   { dark:  { bg:'oklch(0.12 0.05 22)',  bg2:'oklch(0.17 0.07 22)',  fg:'oklch(0.97 0.01 22)',  primary:'oklch(0.58 0.30 22)',  muted:'oklch(0.52 0.06 22)',  dim:'oklch(0.30 0.07 22)',  border:'oklch(0.26 0.09 22)'  },
+              light: { bg:'oklch(0.99 0.005 22)',  bg2:'oklch(0.93 0.025 22)', fg:'oklch(0.15 0.04 22)',  primary:'oklch(0.47 0.28 22)',  muted:'oklch(0.38 0.05 22)',  dim:'oklch(0.60 0.03 22)',  border:'oklch(0.86 0.04 22)'  } },
 }
 
 const names = Object.keys(THEMES)
@@ -323,15 +348,16 @@ window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e =
 })
 
 function applyTheme() {
-  const t = THEMES[names[themeIdx]][mode]
+  const name = names[themeIdx]
+  const t = THEMES[name][mode]
   const r = document.documentElement.style
   r.setProperty('--bg', t.bg); r.setProperty('--bg2', t.bg2)
   r.setProperty('--fg', t.fg); r.setProperty('--primary', t.primary)
   r.setProperty('--muted', t.muted); r.setProperty('--dim', t.dim)
   r.setProperty('--border', t.border)
-  document.getElementById('theme-btn').textContent = `theme: ${names[themeIdx]} ↻`
+  document.getElementById('theme-btn').textContent = `theme: ${name} ↻`
   document.getElementById('mode-btn').textContent  = mode === 'dark' ? '☀ light' : '☾ dark'
-  document.getElementById('screenshot').src = mode === 'dark' ? DARK_SS : LIGHT_SS
+  document.getElementById('screenshot').src = `files/${name}-${mode}.png`
 }
 
 applyTheme()
