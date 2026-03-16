@@ -3,7 +3,20 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>coconut creme</title>
+<title>coconut creme — desktop IPTV for macOS</title>
+<meta name="description" content="coconut creme is a desktop IPTV player for macOS. stream live TV, movies, and series via Xtream Codes or M3U. free download.">
+<meta name="keywords" content="IPTV player, macOS IPTV, desktop IPTV, Xtream Codes, M3U player, live TV macOS">
+<meta name="author" content="hotelsoap">
+<meta property="og:title" content="coconut creme">
+<meta property="og:description" content="desktop IPTV player for macOS. live TV, movies, series.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coconutcreme.hotelsoap.org">
+<meta property="og:image" content="https://coconutcreme.hotelsoap.org/files/brazil-dark.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="coconut creme">
+<meta name="twitter:description" content="desktop IPTV player for macOS. live TV, movies, series.">
+<meta name="twitter:image" content="https://coconutcreme.hotelsoap.org/files/brazil-dark.webp">
+<link rel="canonical" href="https://coconutcreme.hotelsoap.org">
 <style>
   :root {
     --bg:      oklch(0.18 0.02 340);
@@ -191,7 +204,7 @@
 <div class="screenshot-wrap">
   <div class="mac-window">
     <img id="screenshot"
-      src="files/brazil-dark.png"
+      src="files/brazil-dark.webp"
       alt="coconut creme screenshot">
   </div>
 </div>
@@ -332,7 +345,7 @@ function applyTheme() {
   r.setProperty('--border', t.border)
   document.getElementById('theme-btn').textContent = `theme: ${name} ↻`
   document.getElementById('mode-btn').textContent  = mode === 'dark' ? '☀ light' : '☾ dark'
-  document.getElementById('screenshot').src = `files/${name}-${mode}.png`
+  document.getElementById('screenshot').src = `files/${name}-${mode}.webp`
 }
 
 applyTheme()
