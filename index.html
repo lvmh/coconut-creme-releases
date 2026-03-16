@@ -64,6 +64,24 @@
   .ok { color: var(--primary); }
   .dim-text { color: var(--muted); }
 
+  /* typewriter cursor — matches app modal style */
+  @keyframes terminal-cursor-blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  .terminal-cursor {
+    display: inline-block;
+    color: var(--primary);
+    animation: terminal-cursor-blink 800ms step-end infinite;
+  }
+
+  /* page fade-in after boot */
+  #page-content {
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  #page-content.visible { opacity: 1; }
+
   /* hero */
   #hero { margin-bottom: 52px; }
   .app-name { font-size: 28px; color: var(--fg); letter-spacing: -0.5px; margin-bottom: 4px; }
@@ -197,11 +215,12 @@
 </div>
 
 <div id="boot">
-  <span class="dim-text">$ coconut-creme --init</span><br>
-  <span class="dim-text">loading broadcast engine... <span class="ok">✓</span></span><br>
-  <span class="ok">▸ signal acquired.</span>
+  <span class="dim-text" id="boot-line1"></span><span class="terminal-cursor" id="boot-cursor">_</span><br>
+  <span class="dim-text" id="boot-line2"></span><br>
+  <span class="ok" id="boot-line3"></span>
 </div>
 
+<div id="page-content">
 <div class="deco">  *  .  *  .     .  *  .
   .     .  *  .     .  *  .</div>
 
@@ -318,8 +337,70 @@
 <div style="margin-top: 52px; color: var(--muted); font-size: 12px;">
   by <a href="https://hotelsoap.org" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">hotelsoap</a> for you ❤️
 </div>
+</div><!-- /page-content -->
 
 <script>
+// typewriter boot sequence
+;(function() {
+  const line1 = document.getElementById('boot-line1')
+  const line2 = document.getElementById('boot-line2')
+  const line3 = document.getElementById('boot-line3')
+  const cursor = document.getElementById('boot-cursor')
+  const page   = document.getElementById('page-content')
+
+  const TEXT1 = '$ coconut-creme --init'
+  const TEXT2 = 'loading broadcast engine... ✓'
+  const TEXT3 = '▸ signal acquired.'
+
+  // timing (ms)
+  const T_TYPE_CHAR  = 38   // per char typing speed
+  const T_LINE_PAUSE = 320  // pause between lines
+  const T_FADE_DELAY = 400  // wait after last line before fade-in
+
+  function type(el, text, cb) {
+    let i = 0
+    function tick() {
+      if (i <= text.length) {
+        el.textContent = text.slice(0, i++)
+        setTimeout(tick, T_TYPE_CHAR)
+      } else {
+        cb && cb()
+      }
+    }
+    tick()
+  }
+
+  // line 1
+  type(line1, TEXT1, () => {
+    // move cursor to line 2
+    cursor.style.display = 'none'
+    setTimeout(() => {
+      // inject ok span into line2 for the checkmark colour
+      cursor.style.display = ''
+      // type line 2 plain, then swap checkmark to green
+      type(line2, TEXT2.replace('✓', ''), () => {
+        const ok = document.createElement('span')
+        ok.className = 'ok'
+        ok.textContent = '✓'
+        line2.appendChild(ok)
+        cursor.style.display = 'none'
+        setTimeout(() => {
+          // line 3
+          cursor.style.display = ''
+          line3.parentNode.insertBefore(cursor, line3.nextSibling)
+          type(line3, TEXT3, () => {
+            cursor.style.display = 'none'
+            // fade in the rest of the page
+            setTimeout(() => {
+              page.classList.add('visible')
+            }, T_FADE_DELAY)
+          })
+        }, T_LINE_PAUSE)
+      })
+    }, T_LINE_PAUSE)
+  })
+})()
+
 const THEME_NAMES = ['brazil','kanagawa','noni','paris','rooney']
 const MODES = ['dark','light']
 const _cache = {}
