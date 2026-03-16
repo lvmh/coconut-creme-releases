@@ -263,8 +263,14 @@ const THEMES = {
 }
 
 const names = Object.keys(THEMES)
-let themeIdx = Math.floor(Math.random() * names.length)
 let mode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+let themeIdx = names.indexOf(mode === 'dark' ? 'brazil' : 'noni')
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+  mode = e.matches ? 'dark' : 'light'
+  themeIdx = names.indexOf(mode === 'dark' ? 'brazil' : 'noni')
+  applyTheme()
+})
 
 function applyTheme() {
   const t = THEMES[names[themeIdx]][mode]
