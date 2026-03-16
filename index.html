@@ -53,10 +53,11 @@
   .tagline { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
   .dl-btn {
     display: inline-block; font-family: ui-monospace, monospace; font-size: 13px;
-    padding: 9px 24px; background: var(--primary); color: var(--bg);
-    text-decoration: none; transition: opacity 0.15s; margin-right: 16px;
+    padding: 9px 24px; background: transparent; color: var(--primary);
+    border: 1px solid var(--primary); text-decoration: none; margin-right: 16px;
+    transition: background 0.15s, color 0.15s;
   }
-  .dl-btn:hover { opacity: 0.82; }
+  .dl-btn:hover { background: var(--primary); color: var(--bg); }
   .version-meta { color: var(--dim); font-size: 11px; margin-top: 12px; }
 
   /* section */
