@@ -236,7 +236,7 @@
 <div id="hero">
   <div class="app-name">coconut creme <span class="stars">***</span></div>
   <div class="tagline">yr iptv yr desktop</div>
-  <a href="https://github.com/lvmh/coconut-creme-releases/releases/latest" class="dl-btn">⬇ download v0.1.2 &nbsp;(.dmg)</a>
+  <a href="https://github.com/lvmh/coconut-creme-releases/releases/latest" class="dl-btn">⬇ download v0.1.5 &nbsp;(.dmg)</a>
   <div class="version-meta">macOS · Apple Silicon · arm64</div>
 </div>
 
@@ -259,6 +259,10 @@
     <div class="feat-item">live sports scores</div>
     <div class="feat-item">channel search</div>
     <div class="feat-item">auto-updates</div>
+    <div class="feat-item">smart channel names</div>
+    <div class="feat-item">quality variant dedup</div>
+    <div class="feat-item">4-tier stream recovery</div>
+    <div class="feat-item">frame-freeze canvas</div>
   </div>
 </div>
 
@@ -321,7 +325,31 @@
 <!-- changelog -->
 <div class="section">
   <div class="section-head"><span class="hash">## </span>changelog</div>
-  <div class="cl-ver">v0.1.2 <span style="color:var(--muted)">— latest</span></div>
+  <div class="cl-ver">v0.1.5 <span style="color:var(--muted)">— latest</span></div>
+  <div class="cl-date">2026-03-23</div>
+  <div class="cl-item add">smart channel name parser — 7-stage pipeline, title casing, event time extraction</div>
+  <div class="cl-item add">quality variant dedup — groups HD/FHD/4K copies, expandable per channel</div>
+  <div class="cl-item add">coloured quality tier badges (4K / FHD / HD / SD)</div>
+  <div class="cl-item add">flo-sports, ESPN+, PPV event format parsing with match info</div>
+  <div class="cl-item add">section header detection for channel list dividers</div>
+  <div class="cl-item fix">false country flags on "NO EVENT" / Dutch phrases / Arabic articles</div>
+  <div class="cl-item fix">duplicate quality badges when tier badge present</div>
+  <div class="cl-item fix">small-caps unicode (ʜᴅ) now normalised to HD</div>
+  <div class="cl-sep">──────────────────────────────────────</div>
+  <div class="cl-ver" style="opacity:0.55">v0.1.4</div>
+  <div class="cl-date">2026-03-22</div>
+  <div class="cl-item add">video player resilience — Shaka fallback, 4-tier recovery, frame-freeze canvas</div>
+  <div class="cl-item add">reconnecting UI overlay with backoff timer</div>
+  <div class="cl-item add">channel reliability tracking per-stream</div>
+  <div class="cl-item fix">stall recovery race conditions</div>
+  <div class="cl-sep">──────────────────────────────────────</div>
+  <div class="cl-ver" style="opacity:0.55">v0.1.3</div>
+  <div class="cl-date">2026-03-20</div>
+  <div class="cl-item add">autoplay overlay + skip button for series</div>
+  <div class="cl-item add">subtitle / audio track selector</div>
+  <div class="cl-item add">keyboard controls hook refactor</div>
+  <div class="cl-sep">──────────────────────────────────────</div>
+  <div class="cl-ver" style="opacity:0.55">v0.1.2</div>
   <div class="cl-date">2026-03-16</div>
   <div class="cl-item add">favourites for movies &amp; series (not just live)</div>
   <div class="cl-item add">island broadcast status messages</div>
