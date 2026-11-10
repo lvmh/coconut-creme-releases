@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>coconut creme — desktop IPTV for macOS</title>
-<meta name="description" content="coconut creme is a desktop IPTV player for macOS. stream live TV, movies, and series via Xtream Codes or M3U. free download.">
+<meta name="description" content="coconut creme is a desktop IPTV player for macOS. Holiday &amp; Cow anti-design layouts, floating player, live TV, movies, and series via Xtream Codes or M3U.">
 <meta name="keywords" content="IPTV player, macOS IPTV, desktop IPTV, Xtream Codes, M3U player, live TV macOS">
 <meta name="author" content="hotelsoap">
 <meta property="og:title" content="coconut creme">
-<meta property="og:description" content="desktop IPTV player for macOS. live TV, movies, series.">
+<meta property="og:description" content="desktop IPTV for macOS — quiet anti-design layouts, floating player, live TV, movies, series.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coconutcreme.hotelsoap.org">
 <meta property="og:image" content="https://coconutcreme.hotelsoap.org/files/brazil-dark.webp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="coconut creme">
-<meta name="twitter:description" content="desktop IPTV player for macOS. live TV, movies, series.">
+<meta name="twitter:description" content="desktop IPTV for macOS — quiet anti-design layouts, floating player, live TV, movies, series.">
 <meta name="twitter:image" content="https://coconutcreme.hotelsoap.org/files/brazil-dark.webp">
 <link rel="canonical" href="https://coconutcreme.hotelsoap.org">
 <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -31,6 +31,8 @@
     --muted:   oklch(0.55 0.02 340);
     --dim:     oklch(0.35 0.02 340);
     --border:  oklch(0.30 0.02 340);
+    --chip:    oklch(0.98 0.01 100);
+    --chip-fg: oklch(0.18 0.02 340);
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -38,13 +40,36 @@
   body {
     background: var(--bg);
     color: var(--muted);
-    font-family: ui-monospace, 'SF Mono', 'Cascadia Code', monospace;
-    font-size: 13px;
-    line-height: 1.75;
-    padding: 52px 28px 100px;
-    max-width: 780px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+    padding: 56px 28px 100px;
+    max-width: 820px;
     margin: 0 auto;
     transition: background 0.35s, color 0.35s;
+    min-height: 100vh;
+  }
+
+  #atmosphere {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+    opacity: 0.18;
+  }
+  .orbit-card {
+    position: absolute;
+    left: 50%;
+    top: 48%;
+    width: 88px;
+    height: 118px;
+    margin: -59px 0 0 -44px;
+    border-radius: 4px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--bg2);
+    box-shadow: 0 8px 24px color-mix(in oklch, var(--bg) 40%, transparent);
   }
 
   #controls {
@@ -52,179 +77,259 @@
     display: flex; gap: 8px; z-index: 99;
   }
   .ctl {
-    font-family: ui-monospace, monospace; font-size: 10px;
-    color: var(--dim); border: 1px solid var(--border);
-    padding: 3px 10px; cursor: pointer; background: var(--bg);
-    transition: color 0.2s, border-color 0.2s; user-select: none;
+    font-family: inherit; font-size: 11px;
+    color: var(--chip-fg);
+    background: var(--chip);
+    border: none;
+    padding: 5px 12px;
+    cursor: pointer;
+    user-select: none;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transform: rotate(-1.2deg);
+    transition: transform 0.15s, opacity 0.15s;
   }
-  .ctl:hover { color: var(--primary); border-color: var(--primary); }
+  .ctl:nth-child(2) { transform: rotate(1deg); }
+  .ctl:hover { opacity: 0.85; transform: rotate(0deg); }
 
-  /* boot */
-  #boot { margin-bottom: 36px; }
-  .ok { color: var(--primary); }
-  .dim-text { color: var(--muted); }
-
-  /* typewriter cursor — matches app modal style */
-  @keyframes terminal-cursor-blink {
-    0%, 49% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
-  .terminal-cursor {
-    display: inline-block;
-    color: var(--primary);
-    animation: terminal-cursor-blink 800ms step-end infinite;
-  }
-
-  /* page fade-in after boot */
   #page-content {
+    position: relative;
+    z-index: 1;
     opacity: 0;
-    transition: opacity 1.2s ease;
+    transform: translateY(8px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
   }
-  #page-content.visible { opacity: 1; }
+  #page-content.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-  /* hero */
-  #hero { margin-bottom: 52px; }
-  .app-name { font-size: 28px; color: var(--fg); letter-spacing: -0.5px; margin-bottom: 4px; }
-  .app-name .stars { color: var(--primary); font-size: 20px; }
-  .tagline { color: var(--muted); font-size: 13px; margin-bottom: 28px; }
+  #hero {
+    margin: 8vh 0 48px;
+    text-align: center;
+  }
+  .brand-chip {
+    display: inline-block;
+    background: var(--chip);
+    color: var(--chip-fg);
+    font-size: clamp(1.6rem, 4vw, 2.1rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    padding: 0.18em 0.45em 0.22em;
+    margin-bottom: 18px;
+    transform: rotate(-1.5deg);
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+  }
+  .brand-chip .tilde { opacity: 0.55; font-weight: 500; }
+  .tagline {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 28px;
+    max-width: 28rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .dl-btn {
-    display: inline-block; font-family: ui-monospace, monospace; font-size: 13px;
-    padding: 9px 24px; background: var(--primary); color: var(--bg);
-    border: 1px solid var(--primary); text-decoration: none; margin-right: 16px;
-    transition: background 0.15s, color 0.15s;
+    display: inline-block;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 22px;
+    background: var(--chip);
+    color: var(--chip-fg);
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transform: rotate(0.8deg);
+    transition: transform 0.15s, opacity 0.15s;
   }
-  .dl-btn:hover { background: transparent; color: var(--primary); }
-  .version-meta { color: var(--muted); font-size: 11px; margin-top: 12px; }
+  .dl-btn:hover { opacity: 0.88; transform: rotate(0deg); }
+  a { text-decoration: none; color: inherit; }
+  a:hover { text-decoration: underline; }
+  .popup-open .dl-btn-link { text-decoration: underline; }
+  .version-meta {
+    color: var(--dim);
+    font-size: 12px;
+    margin-top: 14px;
+  }
 
-  /* section */
-  .section { margin-bottom: 52px; }
-  .section-head { color: var(--muted); border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 20px; }
-  .section-head .hash { color: var(--primary); opacity: 0.55; }
-
-  /* macOS app window simulation */
   .screenshot-wrap {
-    width: calc(100% + 240px);
-    margin-left: -120px;
-    margin-bottom: 36px;
-    filter: drop-shadow(0 28px 72px color-mix(in oklch, var(--primary) 30%, black 20%));
-    transition: filter 0.4s;
-  }
-  .screenshot-wrap:hover {
-    filter: drop-shadow(0 36px 96px color-mix(in oklch, var(--primary) 50%, black 20%));
+    width: min(calc(100% + 160px), calc(100vw - 24px));
+    margin-left: max(-80px, calc(-1 * (100vw - 24px - 100%) / 2));
+    margin-bottom: 56px;
   }
   .mac-window {
-    border-radius: 12px;
+    border-radius: 10px;
     overflow: hidden;
+    border: 1px solid color-mix(in oklch, var(--fg) 12%, transparent);
   }
   .mac-window img { width: 100%; display: block; line-height: 0; }
 
-  /* install */
-  .install-steps { display: flex; flex-direction: column; gap: 18px; }
+  .section { margin-bottom: 48px; }
+  .section-head {
+    display: inline-block;
+    background: var(--chip);
+    color: var(--chip-fg);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: lowercase;
+    padding: 3px 10px;
+    margin-bottom: 18px;
+    transform: rotate(-0.8deg);
+  }
+
+  .feat-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 8px;
+  }
+  .feat-item {
+    display: inline-block;
+    background: color-mix(in oklch, var(--chip) 88%, var(--bg));
+    color: var(--chip-fg);
+    font-size: 12px;
+    padding: 4px 10px;
+    transform: rotate(-0.4deg);
+  }
+  .feat-item:nth-child(even) { transform: rotate(0.6deg); }
+  .feat-item:nth-child(3n) { transform: rotate(-1deg); }
+
+  .callout {
+    background: color-mix(in oklch, var(--bg2) 85%, var(--chip));
+    padding: 16px 18px;
+    font-size: 13px;
+  }
+  .callout .callout-head {
+    color: var(--fg);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .callout p { color: var(--muted); margin-bottom: 8px; }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout strong { color: var(--fg); font-weight: 600; }
+
+  .install-steps { display: flex; flex-direction: column; gap: 16px; }
   .step { display: flex; gap: 14px; align-items: flex-start; }
-  .step-num { color: var(--primary); font-size: 11px; padding-top: 1px; flex-shrink: 0; width: 20px; }
-  .step-title { color: var(--fg); margin-bottom: 4px; }
-  .step-desc { color: var(--muted); font-size: 12px; margin-bottom: 8px; }
+  .step-num {
+    flex-shrink: 0;
+    background: var(--chip);
+    color: var(--chip-fg);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 7px;
+    transform: rotate(-1deg);
+  }
+  .step-title { color: var(--fg); font-weight: 600; margin-bottom: 4px; }
+  .step-desc { color: var(--muted); font-size: 13px; margin-bottom: 8px; }
   .code-block {
-    background: var(--bg2); border: 1px solid var(--border);
-    padding: 8px 14px; font-size: 12px; color: var(--dim); display: inline-block;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: ui-monospace, monospace;
+    color: var(--dim);
+    display: inline-block;
+    max-width: 100%;
+    overflow-x: auto;
   }
   .code-block .prompt { color: var(--dim); }
-  .code-block .cmd    { color: var(--fg); }
-  .code-block .arg    { color: var(--primary); }
-  .step-note { color: var(--muted); font-size: 11px; margin-top: 6px; }
+  .code-block .cmd { color: var(--fg); }
+  .code-block .arg { color: var(--primary); }
+  .step-note { color: var(--muted); font-size: 12px; margin-top: 6px; }
 
-  /* requirement callout */
-  .callout {
-    border: 1px solid var(--border);
-    background: var(--bg2);
-    padding: 14px 16px;
-    margin-bottom: 20px;
-    font-size: 12px;
+  .cl-ver { color: var(--fg); font-weight: 600; }
+  .cl-date { color: var(--dim); font-size: 12px; margin-bottom: 10px; }
+  .cl-item {
+    color: var(--muted);
+    padding-left: 16px;
+    position: relative;
+    margin-bottom: 4px;
+    font-size: 13px;
   }
-  .callout .callout-head { color: var(--fg); margin-bottom: 6px; }
-  .callout p { color: var(--fg); margin-bottom: 6px; opacity: 0.75; }
-  .callout p:last-child { margin-bottom: 0; }
-  .callout a { color: var(--primary); text-decoration: none; }
-  .callout a:hover { text-decoration: underline; }
-
-  /* features */
-  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 40px; }
-  .feat-item { color: var(--muted); }
-  .feat-item::before { content: '▸ '; color: var(--primary); }
-
-  /* changelog */
-  .cl-ver  { color: var(--primary); }
-  .cl-date { color: var(--dim); font-size: 11px; margin-bottom: 8px; }
-  .cl-item { color: var(--muted); padding-left: 16px; position: relative; margin-bottom: 2px; }
   .cl-item::before { position: absolute; left: 0; }
   .cl-item.fix::before { content: '~'; color: oklch(0.72 0.15 80); }
   .cl-item.add::before { content: '+'; color: oklch(0.65 0.18 145); }
-  .cl-sep  { color: var(--border); margin: 16px 0 14px; }
+  .cl-sep { color: var(--border); margin: 18px 0 14px; letter-spacing: 0.08em; }
 
-  .deco { color: var(--primary); font-size: 10px; opacity: 0.4; white-space: pre; user-select: none; margin-bottom: 32px; line-height: 1.5; }
-
-  /* floating stars — same as the app */
-  .star {
+  #dl-overlay {
+    position: fixed; inset: 0; z-index: 200;
+    background: color-mix(in oklch, var(--bg) 55%, transparent);
+    display: none;
+  }
+  #dl-popup {
     position: fixed;
-    pointer-events: none;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(920px, calc(100vw - 16px));
+    height: min(620px, calc(100vh - 16px));
+    background: var(--bg);
+    border: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  #dl-titlebar {
+    background: var(--chip);
+    color: var(--chip-fg);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 8px 12px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
     user-select: none;
-    z-index: 50;
   }
-  .star-twinkle {
-    animation: twinkle var(--duration) ease-in-out infinite, float calc(var(--duration) * 1.5) ease-in-out infinite;
-    animation-delay: var(--delay);
+  #dl-close {
+    cursor: pointer; font-size: 18px; line-height: 1;
+    opacity: 0.7; transition: opacity 0.15s;
   }
-  .star-sparkle {
-    animation: sparkle var(--duration) ease-in-out infinite;
-    animation-delay: var(--delay);
+  #dl-close:hover { opacity: 1; }
+  #dl-frame {
+    flex: 1; border: none; width: 100%; height: 100%;
   }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.2; transform: scale(0.8) rotate(0deg); }
-    50% { opacity: 1; transform: scale(1.2) rotate(180deg); }
+
+  .footer {
+    margin-top: 56px;
+    color: var(--muted);
+    font-size: 13px;
   }
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    25% { transform: translateY(-8px) rotate(5deg); }
-    75% { transform: translateY(8px) rotate(-5deg); }
-  }
-  @keyframes sparkle {
-    0%, 100% { opacity: 0.3; text-shadow: 0 0 2px currentColor; }
-    50% { opacity: 1; text-shadow: 0 0 12px currentColor, 0 0 20px currentColor; }
+  .footer a { color: var(--fg); }
+
+  @media (max-width: 640px) {
+    body { padding: 48px 18px 72px; }
+    .feat-item { font-size: 11px; }
+    .orbit-card { width: 56px; height: 76px; margin: -38px 0 0 -28px; }
   }
 </style>
 </head>
 <body>
 
-<!-- decorative stars — exact same chars/positions as the app -->
-<span class="star star-twinkle" style="font-size:1.5rem;top:8%;left:12%;color:var(--primary);--duration:3s;--delay:0s">*</span>
-<span class="star star-sparkle" style="font-size:1.125rem;top:15%;left:85%;color:var(--primary);--duration:2.5s;--delay:0.3s">+</span>
-<span class="star star-twinkle" style="font-size:1.875rem;top:25%;left:5%;color:var(--primary);--duration:4s;--delay:0.7s">.</span>
-<span class="star star-sparkle" style="font-size:1.25rem;top:35%;left:92%;color:var(--primary);--duration:2.8s;--delay:1.1s">*</span>
-<span class="star star-twinkle" style="font-size:1.5rem;top:55%;left:8%;color:var(--primary);--duration:3.2s;--delay:0.5s">+</span>
-<span class="star star-sparkle" style="font-size:1.125rem;top:65%;left:88%;color:var(--primary);--duration:2.6s;--delay:0.9s">.</span>
-<span class="star star-twinkle" style="font-size:1.25rem;top:78%;left:15%;color:var(--primary);--duration:3.5s;--delay:1.3s">*</span>
-<span class="star star-sparkle" style="font-size:1.5rem;top:85%;left:82%;color:var(--primary);--duration:2.9s;--delay:0.2s">+</span>
-<span class="star star-twinkle" style="font-size:1.125rem;top:12%;left:45%;color:var(--primary);--duration:4.2s;--delay:0.6s">.</span>
-<span class="star star-sparkle" style="font-size:1.25rem;top:88%;left:50%;color:var(--primary);--duration:3.1s;--delay:1.0s">*</span>
-<span class="star star-twinkle" style="font-size:1.125rem;top:42%;left:3%;color:var(--primary);--duration:2.7s;--delay:0.4s">+</span>
-<span class="star star-sparkle" style="font-size:1.5rem;top:48%;left:95%;color:var(--primary);--duration:3.8s;--delay:0.8s">.</span>
+<div id="atmosphere" aria-hidden="true"></div>
 
-<div id="controls">
-  <div class="ctl" id="mode-btn">☀ light</div>
-  <div class="ctl" id="theme-btn">theme: brazil ↻</div>
+<!-- download iframe popup -->
+<div id="dl-overlay" onclick="closeDlPopup(event)">
+  <div id="dl-popup" onclick="event.stopPropagation()">
+    <div id="dl-titlebar">
+      <span>coconut creme — download</span>
+      <span id="dl-close" onclick="closeDlPopup()">×</span>
+    </div>
+    <iframe id="dl-frame" src="" title="download"></iframe>
+  </div>
 </div>
 
-<div id="boot">
-  <div><span class="dim-text" id="boot-line1"></span><span class="terminal-cursor" id="boot-cursor">_</span></div>
-  <div id="boot-l2" style="display:none"><span class="dim-text" id="boot-line2"></span></div>
-  <div id="boot-l3" style="display:none"><span class="ok" id="boot-line3"></span></div>
+<div id="controls">
+  <div class="ctl" id="mode-btn">light</div>
+  <div class="ctl" id="theme-btn">theme: brazil</div>
 </div>
 
 <div id="page-content">
-<div class="deco">  *  .  *  .     .  *  .
-  .     .  *  .     .  *  .</div>
+<div id="hero">
+  <div class="brand-chip">coconut creme <span class="tilde">~</span></div>
+  <div class="tagline">quiet desktop IPTV — holiday &amp; cow layouts, floating player, live / movies / series</div>
+  <span class="dl-btn dl-btn-link" onclick="openDlPopup()">download v0.1.50 · .dmg</span>
+  <div class="version-meta">macOS · Apple Silicon · arm64</div>
+</div>
 
-<!-- screenshot with macOS window chrome -->
 <div class="screenshot-wrap">
   <div class="mac-window">
     <img id="screenshot"
@@ -233,73 +338,53 @@
   </div>
 </div>
 
-<div id="hero">
-  <div class="app-name">coconut creme <span class="stars">***</span></div>
-  <div class="tagline">yr iptv yr desktop</div>
-  <a href="https://github.com/lvmh/coconut-creme-releases/releases/latest" class="dl-btn">⬇ download v0.1.5 &nbsp;(.dmg)</a>
-  <div class="version-meta">macOS · Apple Silicon · arm64</div>
-</div>
-
-<div class="deco">     *  .     *  .  *
-  .  *  .     .  *  .   .</div>
-
-<!-- features -->
 <div class="section">
-  <div class="section-head"><span class="hash">## </span>features</div>
+  <div class="section-head">features</div>
   <div class="feat-grid">
+    <div class="feat-item">holiday + cow layouts</div>
+    <div class="feat-item">floating player</div>
     <div class="feat-item">live TV streaming</div>
-    <div class="feat-item">HLS + MPEG-TS playback</div>
     <div class="feat-item">movies &amp; VOD</div>
-    <div class="feat-item">slow mode buffering</div>
     <div class="feat-item">series &amp; episodes</div>
-    <div class="feat-item">adaptive buffer tuning</div>
-    <div class="feat-item">TMDB metadata + posters</div>
-    <div class="feat-item">resume playback</div>
-    <div class="feat-item">colour themes</div>
+    <div class="feat-item">mpv native playback</div>
+    <div class="feat-item">chip search</div>
+    <div class="feat-item">TMDB metadata</div>
+    <div class="feat-item">colour palettes</div>
     <div class="feat-item">live sports scores</div>
-    <div class="feat-item">channel search</div>
+    <div class="feat-item">aspect-aware resize</div>
     <div class="feat-item">auto-updates</div>
-    <div class="feat-item">smart channel names</div>
-    <div class="feat-item">quality variant dedup</div>
-    <div class="feat-item">4-tier stream recovery</div>
-    <div class="feat-item">frame-freeze canvas</div>
   </div>
 </div>
 
-<div class="deco">  *  .  *  .     .  *  .
-  .     .  *  .     .  *  .</div>
-
-<!-- iptv subscription note -->
 <div class="section">
-  <div class="section-head"><span class="hash">## </span>what you need</div>
+  <div class="section-head">what you need</div>
   <div class="callout">
     <div class="callout-head">you'll need an IPTV subscription.</div>
-    <p>coconut creme is a player — it doesn't come with content. you need a subscription from a provider that supports <strong style="color:var(--fg)">Xtream Codes</strong> or <strong style="color:var(--fg)">M3U playlists</strong>.</p>
+    <p>coconut creme is a player — it doesn't come with content. you need a subscription from a provider that supports <strong>Xtream Codes</strong> or <strong>M3U playlists</strong>.</p>
     <p>your provider gives you a server URL, username, and password. enter those on the login screen.</p>
-    <p style="color:var(--muted)">search <span style="color:var(--primary)">"xtream codes IPTV"</span> to find providers — most offer a trial before you commit.</p>
+    <p>search <strong>"xtream codes IPTV"</strong> to find providers — most offer a trial before you commit.</p>
   </div>
 </div>
 
-<!-- install -->
 <div class="section">
-  <div class="section-head"><span class="hash">## </span>install</div>
+  <div class="section-head">install</div>
   <div class="install-steps">
     <div class="step">
-      <div class="step-num">01.</div>
+      <div class="step-num">01</div>
       <div class="step-body">
         <div class="step-title">download the .dmg</div>
-        <div class="step-desc">click the button above and open the disk image</div>
+        <div class="step-desc">click the chip above and open the disk image</div>
       </div>
     </div>
     <div class="step">
-      <div class="step-num">02.</div>
+      <div class="step-num">02</div>
       <div class="step-body">
         <div class="step-title">drag to applications</div>
         <div class="step-desc">move coconut creme.app into your applications folder</div>
       </div>
     </div>
     <div class="step">
-      <div class="step-num">03.</div>
+      <div class="step-num">03</div>
       <div class="step-body">
         <div class="step-title">remove quarantine flag</div>
         <div class="step-desc">macOS blocks apps distributed outside the app store — run this once in terminal:</div>
@@ -310,133 +395,67 @@
       </div>
     </div>
     <div class="step">
-      <div class="step-num">04.</div>
+      <div class="step-num">04</div>
       <div class="step-body">
         <div class="step-title">launch &amp; connect</div>
-        <div class="step-desc">open the app and enter your IPTV provider URL + credentials</div>
+        <div class="step-desc">open the app, pick holiday or cow, and enter your IPTV credentials</div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="deco">  .  *  .     *     .  *
-     .  *  .     .  *  .  </div>
-
-<!-- changelog -->
 <div class="section">
-  <div class="section-head"><span class="hash">## </span>changelog</div>
-  <div class="cl-ver">v0.1.5 <span style="color:var(--muted)">— latest</span></div>
+  <div class="section-head">changelog</div>
+  <div class="cl-ver">v0.1.50 <span style="color:var(--muted); font-weight:400">— latest</span></div>
+  <div class="cl-date">2026-11-10</div>
+  <div class="cl-item add">holiday &amp; cow anti-design layouts — atmosphere + chip search + floating player</div>
+  <div class="cl-item add">traffic-lights hotzone — macOS chrome hides until the top-left corner</div>
+  <div class="cl-item add">mpv focus restore after app / Spaces switches (force raise + retries)</div>
+  <div class="cl-item add">height-led aspect snap on windowed + app-fullscreen resize</div>
+  <div class="cl-item add">letterbox framing (no crop-fill) outside intentional fullscreen letterbox</div>
+  <div class="cl-item add">opaque anti series picker, seek-on-time, idle cursor hide in fullscreen</div>
+  <div class="cl-item fix">series episode fetch stalls / empty results across alt API bases</div>
+  <div class="cl-item fix">Escape focus reclaim after exiting OS fullscreen</div>
+  <div class="cl-sep">············</div>
+  <div class="cl-ver" style="opacity:0.55">v0.1.5</div>
   <div class="cl-date">2026-03-23</div>
   <div class="cl-item add">smart channel name parser — 7-stage pipeline, title casing, event time extraction</div>
   <div class="cl-item add">quality variant dedup — groups HD/FHD/4K copies, expandable per channel</div>
   <div class="cl-item add">coloured quality tier badges (4K / FHD / HD / SD)</div>
-  <div class="cl-item add">flo-sports, ESPN+, PPV event format parsing with match info</div>
-  <div class="cl-item add">section header detection for channel list dividers</div>
-  <div class="cl-item fix">false country flags on "NO EVENT" / Dutch phrases / Arabic articles</div>
-  <div class="cl-item fix">duplicate quality badges when tier badge present</div>
-  <div class="cl-item fix">small-caps unicode (ʜᴅ) now normalised to HD</div>
-  <div class="cl-sep">──────────────────────────────────────</div>
+  <div class="cl-sep">············</div>
   <div class="cl-ver" style="opacity:0.55">v0.1.4</div>
   <div class="cl-date">2026-03-22</div>
   <div class="cl-item add">video player resilience — Shaka fallback, 4-tier recovery, frame-freeze canvas</div>
-  <div class="cl-item add">reconnecting UI overlay with backoff timer</div>
-  <div class="cl-item add">channel reliability tracking per-stream</div>
   <div class="cl-item fix">stall recovery race conditions</div>
-  <div class="cl-sep">──────────────────────────────────────</div>
-  <div class="cl-ver" style="opacity:0.55">v0.1.3</div>
-  <div class="cl-date">2026-03-20</div>
-  <div class="cl-item add">autoplay overlay + skip button for series</div>
-  <div class="cl-item add">subtitle / audio track selector</div>
-  <div class="cl-item add">keyboard controls hook refactor</div>
-  <div class="cl-sep">──────────────────────────────────────</div>
-  <div class="cl-ver" style="opacity:0.55">v0.1.2</div>
-  <div class="cl-date">2026-03-16</div>
-  <div class="cl-item add">favourites for movies &amp; series (not just live)</div>
-  <div class="cl-item add">island broadcast status messages</div>
-  <div class="cl-item fix">slow-mode stall seek-back race condition</div>
-  <div class="cl-item fix">window position on fullscreen exit</div>
-  <div class="cl-sep">──────────────────────────────────────</div>
-  <div class="cl-ver" style="opacity:0.55">v0.1.1</div>
-  <div class="cl-date">2026-03-15</div>
-  <div class="cl-item fix">replace availTop with Tauri monitor API</div>
-  <div class="cl-item add">icon overhaul + release pipeline</div>
 </div>
 
-<div style="margin-top: 52px; color: var(--muted); font-size: 12px;">
-  by <a href="https://hotelsoap.org" target="_blank" rel="noopener noreferrer" style="color: var(--primary); text-decoration: none;">hotelsoap</a> for you ❤️
+<div class="footer">
+  by <a href="https://hotelsoap.org" target="_blank" rel="noopener noreferrer">hotelsoap</a>
 </div>
 </div><!-- /page-content -->
 
 <script>
-// typewriter boot sequence
 ;(function() {
-  const line1  = document.getElementById('boot-line1')
-  const line2  = document.getElementById('boot-line2')
-  const line3  = document.getElementById('boot-line3')
-  const bootL2 = document.getElementById('boot-l2')
-  const bootL3 = document.getElementById('boot-l3')
-  const cursor = document.getElementById('boot-cursor')
-  const page   = document.getElementById('page-content')
-
-  const TEXT1  = '$ coconut-creme --init'
-  const TEXT2A = 'loading broadcast engine'
-  const TEXT3  = '▸ signal acquired.'
-
-  const T_CHAR       = 52   // ms per character
-  const T_PAUSE      = 400  // pause between lines
-  const T_DOT        = 700  // ms between each dot
-  const T_TICK_PAUSE = 1100 // suspense before ✓ snaps in
-  const T_FADE       = 400  // delay before page fades in
-
-  function moveCursorAfter(el) {
-    el.parentNode.appendChild(cursor)
-  }
-
-  function type(el, text, cb) {
-    let i = 0
-    function tick() {
-      el.textContent = text.slice(0, i++)
-      if (i <= text.length) setTimeout(tick, T_CHAR)
-      else cb && cb()
-    }
-    tick()
-  }
-
-  function startLine3() {
-    bootL3.style.display = ''
-    moveCursorAfter(line3)
-    type(line3, TEXT3, () => {
-      cursor.style.display = 'none'
-      setTimeout(() => page.classList.add('visible'), T_FADE)
-    })
-  }
-
-  function addDots(n) {
-    line2.textContent = TEXT2A + '.'.repeat(n)
-    if (n < 3) {
-      setTimeout(() => addDots(n + 1), T_DOT)
-    } else {
-      // suspense pause, then ✓ snaps in, then line 3
-      setTimeout(() => {
-        const ok = document.createElement('span')
-        ok.className = 'ok'
-        ok.textContent = ' ✓'
-        line2.parentNode.insertBefore(ok, cursor)
-        setTimeout(startLine3, T_PAUSE)
-      }, T_TICK_PAUSE)
-    }
-  }
-
-  // line 1 → pause → line 2 → dots → ✓ → line 3 → fade
-  type(line1, TEXT1, () => {
-    setTimeout(() => {
-      bootL2.style.display = ''
-      moveCursorAfter(line2)
-      type(line2, TEXT2A, () => {
-        setTimeout(() => addDots(1), T_DOT)
-      })
-    }, T_PAUSE)
+  // Soft fade-in — no terminal boot sequence
+  requestAnimationFrame(() => {
+    document.getElementById('page-content').classList.add('visible')
   })
+
+  // Quiet orbit atmosphere from theme screenshots
+  const atmos = document.getElementById('atmosphere')
+  const shots = ['brazil','kanagawa','noni','paris','rooney']
+  const modes = ['dark','light']
+  for (let i = 0; i < 10; i++) {
+    const el = document.createElement('div')
+    el.className = 'orbit-card'
+    const theme = shots[i % shots.length]
+    const mode = modes[i % 2]
+    el.style.backgroundImage = `url(files/${theme}-${mode}.webp)`
+    const angle = (i / 10) * Math.PI * 2 - Math.PI / 2
+    const radius = 38 + (i % 3) * 6
+    el.style.transform = `translate(${Math.cos(angle) * radius}vw, ${Math.sin(angle) * radius * 0.55}vh) rotate(${(i % 5) - 2}deg)`
+    atmos.appendChild(el)
+  }
 })()
 
 const THEME_NAMES = ['brazil','kanagawa','noni','paris','rooney']
@@ -449,16 +468,16 @@ THEME_NAMES.forEach(t => MODES.forEach(m => {
 }))
 
 const THEMES = {
-  brazil:   { dark:  { bg:'oklch(0.16 0.03 265)', bg2:'oklch(0.20 0.04 265)', fg:'oklch(0.92 0.02 145)', primary:'oklch(0.9 0.18 95)',   muted:'oklch(0.55 0.04 145)', dim:'oklch(0.34 0.04 265)', border:'oklch(0.30 0.05 265)' },
-              light: { bg:'oklch(0.98 0.01 145)', bg2:'oklch(0.93 0.03 145)', fg:'oklch(0.22 0.03 265)', primary:'oklch(0.48 0.18 145)', muted:'oklch(0.38 0.04 265)', dim:'oklch(0.60 0.02 265)', border:'oklch(0.85 0.04 145)' } },
-  kanagawa: { dark:  { bg:'oklch(0.16 0.02 285)', bg2:'oklch(0.13 0.02 285)', fg:'oklch(0.88 0.05 88)',  primary:'oklch(0.73 0.08 222)', muted:'oklch(0.5 0.03 80)',   dim:'oklch(0.26 0.03 285)', border:'oklch(0.26 0.03 285)' },
-              light: { bg:'oklch(0.95 0.05 92)',  bg2:'oklch(0.89 0.07 88)',  fg:'oklch(0.4 0.03 280)',  primary:'oklch(0.55 0.09 222)', muted:'oklch(0.49 0.04 82)',  dim:'oklch(0.79 0.06 88)',  border:'oklch(0.79 0.06 88)'  } },
-  noni:     { dark:  { bg:'oklch(0.2 0.035 118)', bg2:'oklch(0.25 0.05 118)', fg:'oklch(0.9 0.025 118)', primary:'oklch(0.74 0.15 122)', muted:'oklch(0.55 0.05 118)', dim:'oklch(0.36 0.06 118)', border:'oklch(0.32 0.06 118)' },
-              light: { bg:'oklch(0.96 0.012 118)',bg2:'oklch(0.90 0.03 118)', fg:'oklch(0.28 0.05 118)', primary:'oklch(0.56 0.18 118)', muted:'oklch(0.38 0.05 118)', dim:'oklch(0.60 0.03 118)', border:'oklch(0.78 0.06 118)' } },
-  paris:    { dark:  { bg:'oklch(0.16 0.03 330)', bg2:'oklch(0.20 0.04 330)', fg:'oklch(0.95 0.01 330)', primary:'oklch(0.78 0.28 328)', muted:'oklch(0.55 0.03 330)', dim:'oklch(0.34 0.04 330)', border:'oklch(0.30 0.04 330)' },
-              light: { bg:'oklch(0.99 0.01 330)', bg2:'oklch(0.95 0.03 330)', fg:'oklch(0.22 0.02 330)', primary:'oklch(0.62 0.28 328)', muted:'oklch(0.38 0.03 330)', dim:'oklch(0.62 0.02 330)', border:'oklch(0.88 0.04 330)' } },
-  rooney:   { dark:  { bg:'oklch(0.12 0.05 22)',  bg2:'oklch(0.17 0.07 22)',  fg:'oklch(0.97 0.01 22)',  primary:'oklch(0.58 0.30 22)',  muted:'oklch(0.52 0.06 22)',  dim:'oklch(0.30 0.07 22)',  border:'oklch(0.26 0.09 22)'  },
-              light: { bg:'oklch(0.99 0.005 22)',  bg2:'oklch(0.93 0.025 22)', fg:'oklch(0.15 0.04 22)',  primary:'oklch(0.47 0.28 22)',  muted:'oklch(0.38 0.05 22)',  dim:'oklch(0.60 0.03 22)',  border:'oklch(0.86 0.04 22)'  } },
+  brazil:   { dark:  { bg:'oklch(0.16 0.03 265)', bg2:'oklch(0.20 0.04 265)', fg:'oklch(0.92 0.02 145)', primary:'oklch(0.9 0.18 95)',   muted:'oklch(0.55 0.04 145)', dim:'oklch(0.34 0.04 265)', border:'oklch(0.30 0.05 265)', chip:'oklch(0.97 0.02 95)', chipFg:'oklch(0.18 0.03 265)' },
+              light: { bg:'oklch(0.98 0.01 145)', bg2:'oklch(0.93 0.03 145)', fg:'oklch(0.22 0.03 265)', primary:'oklch(0.48 0.18 145)', muted:'oklch(0.38 0.04 265)', dim:'oklch(0.60 0.02 265)', border:'oklch(0.85 0.04 145)', chip:'oklch(0.99 0.01 100)', chipFg:'oklch(0.2 0.03 265)' } },
+  kanagawa: { dark:  { bg:'oklch(0.16 0.02 285)', bg2:'oklch(0.13 0.02 285)', fg:'oklch(0.88 0.05 88)',  primary:'oklch(0.73 0.08 222)', muted:'oklch(0.5 0.03 80)',   dim:'oklch(0.26 0.03 285)', border:'oklch(0.26 0.03 285)', chip:'oklch(0.93 0.04 88)', chipFg:'oklch(0.18 0.02 285)' },
+              light: { bg:'oklch(0.95 0.05 92)',  bg2:'oklch(0.89 0.07 88)',  fg:'oklch(0.4 0.03 280)',  primary:'oklch(0.55 0.09 222)', muted:'oklch(0.49 0.04 82)',  dim:'oklch(0.79 0.06 88)',  border:'oklch(0.79 0.06 88)',  chip:'oklch(0.99 0.02 92)', chipFg:'oklch(0.28 0.03 280)' } },
+  noni:     { dark:  { bg:'oklch(0.2 0.035 118)', bg2:'oklch(0.25 0.05 118)', fg:'oklch(0.9 0.025 118)', primary:'oklch(0.74 0.15 122)', muted:'oklch(0.55 0.05 118)', dim:'oklch(0.36 0.06 118)', border:'oklch(0.32 0.06 118)', chip:'oklch(0.95 0.03 118)', chipFg:'oklch(0.2 0.04 118)' },
+              light: { bg:'oklch(0.96 0.012 118)',bg2:'oklch(0.90 0.03 118)', fg:'oklch(0.28 0.05 118)', primary:'oklch(0.56 0.18 118)', muted:'oklch(0.38 0.05 118)', dim:'oklch(0.60 0.03 118)', border:'oklch(0.78 0.06 118)', chip:'oklch(0.99 0.01 118)', chipFg:'oklch(0.24 0.05 118)' } },
+  paris:    { dark:  { bg:'oklch(0.16 0.03 330)', bg2:'oklch(0.20 0.04 330)', fg:'oklch(0.95 0.01 330)', primary:'oklch(0.78 0.28 328)', muted:'oklch(0.55 0.03 330)', dim:'oklch(0.34 0.04 330)', border:'oklch(0.30 0.04 330)', chip:'oklch(0.97 0.02 330)', chipFg:'oklch(0.18 0.03 330)' },
+              light: { bg:'oklch(0.99 0.01 330)', bg2:'oklch(0.95 0.03 330)', fg:'oklch(0.22 0.02 330)', primary:'oklch(0.62 0.28 328)', muted:'oklch(0.38 0.03 330)', dim:'oklch(0.62 0.02 330)', border:'oklch(0.88 0.04 330)', chip:'oklch(1 0 0)', chipFg:'oklch(0.2 0.02 330)' } },
+  rooney:   { dark:  { bg:'oklch(0.12 0.05 22)',  bg2:'oklch(0.17 0.07 22)',  fg:'oklch(0.97 0.01 22)',  primary:'oklch(0.58 0.30 22)',  muted:'oklch(0.52 0.06 22)',  dim:'oklch(0.30 0.07 22)',  border:'oklch(0.26 0.09 22)',  chip:'oklch(0.96 0.02 22)', chipFg:'oklch(0.15 0.05 22)' },
+              light: { bg:'oklch(0.99 0.005 22)',  bg2:'oklch(0.93 0.025 22)', fg:'oklch(0.15 0.04 22)',  primary:'oklch(0.47 0.28 22)',  muted:'oklch(0.38 0.05 22)',  dim:'oklch(0.60 0.03 22)',  border:'oklch(0.86 0.04 22)',  chip:'oklch(1 0 0)', chipFg:'oklch(0.16 0.04 22)' } },
 }
 
 const names = Object.keys(THEMES)
@@ -479,8 +498,10 @@ function applyTheme() {
   r.setProperty('--fg', t.fg); r.setProperty('--primary', t.primary)
   r.setProperty('--muted', t.muted); r.setProperty('--dim', t.dim)
   r.setProperty('--border', t.border)
-  document.getElementById('theme-btn').textContent = `theme: ${name} ↻`
-  document.getElementById('mode-btn').textContent  = mode === 'dark' ? '☀ light' : '☾ dark'
+  r.setProperty('--chip', t.chip); r.setProperty('--chip-fg', t.chipFg)
+  document.documentElement.setAttribute('data-mode', mode)
+  document.getElementById('theme-btn').textContent = `theme: ${name}`
+  document.getElementById('mode-btn').textContent  = mode === 'dark' ? 'light' : 'dark'
   document.getElementById('screenshot').src = `files/${name}-${mode}.webp`
 }
 
@@ -488,6 +509,23 @@ applyTheme()
 
 document.getElementById('theme-btn').addEventListener('click', () => { themeIdx = (themeIdx + 1) % names.length; applyTheme() })
 document.getElementById('mode-btn').addEventListener('click', () => { mode = mode === 'dark' ? 'light' : 'dark'; applyTheme() })
+
+function openDlPopup() {
+  if (window.innerWidth < 600) {
+    window.open('https://sssssssssampler.hotelsoap.org/', '_blank')
+    return
+  }
+  document.getElementById('dl-frame').src = 'https://sssssssssampler.hotelsoap.org/'
+  document.getElementById('dl-overlay').style.display = 'block'
+  document.body.classList.add('popup-open')
+}
+
+function closeDlPopup(e) {
+  if (e && e.target !== document.getElementById('dl-overlay')) return
+  document.getElementById('dl-overlay').style.display = 'none'
+  document.getElementById('dl-frame').src = ''
+  document.body.classList.remove('popup-open')
+}
 </script>
 </body>
 </html>
